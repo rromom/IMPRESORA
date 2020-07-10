@@ -14,6 +14,6 @@ router.post('/', Impresora_Controler.insertImpresora);
 router.put('/:id', Impresora_Controler.updateImpresora);
 
 // Eliminar una Impresora
-
+router.delete('/:id', Impresora_Controler.deleteImpresora);
 
 module.exports = router;

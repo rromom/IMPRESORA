@@ -43,7 +43,7 @@ Impresora_Controler.insertImpresora = async(req, res) => {
 Impresora_Controler.updateImpresora = async(req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['modelo', 'color', 'ip', 'precio']);
-    let impresora = await impresora_model.findById(id, (err, impresora) => {
+    await impresora_model.findById(id, (err, impresora) => {
         if (err) {
             return res.status(400).json({
                 status: false,
@@ -54,13 +54,13 @@ Impresora_Controler.updateImpresora = async(req, res) => {
     await impresora_model.findByIdAndUpdate(id, body, { new: true, runValidators: true, context: 'query' },
         (err, impresora) => {
             if (err) {
-                res.status(400).json({
+                return res.status(400).json({
                     status: false,
                     err
                 });
             }
             impresora.contador = undefined;
-            res.json({
+            return res.json({
                 status: true,
                 impresora
             });
@@ -68,8 +68,23 @@ Impresora_Controler.updateImpresora = async(req, res) => {
     )
 };
 
-Impresora_Controler.deleteImpresora = (req, res) => {
-    res.json("recivido");
+Impresora_Controler.deleteImpresora = async(req, res) => {
+    let id = req.params.id;
+    await impresora_model.findByIdAndDelete(id,
+        (err, impresora) => {
+            if (err) {
+                return res.status(400).json({
+                    status: false,
+                    error: "id no valido"
+                });
+            }
+            impresora.contador = undefined;
+            return res.json({
+                status: "Impresora eliminada",
+                impresora
+            });
+        }
+    );
 };
 
 
